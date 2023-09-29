@@ -67,60 +67,90 @@ chromosome_lengths = {
     "chrY": (1, 59373566),
 }
 
-# Create a dictionary to map chrommosomenames ot integers
-chromosome_to_int = {chromosome: i +1 for i, chromosome in enumerate(chromosome_lengths.keys())}
 
-# Convert and store the transformed chromosome lenght data 
-transformed_chromosome_lenghts = {}
-for chromosome, (start, end) in chromosome_lengths.items():
-    # Get the integer representation of the chromosome name
-    chromosome_int = chromosome_to_int[chromosome]
-    # Combine the chromosome number, start and end vlaues as a tuple
-    transformed_values = (f"{chromosome_int}.{start}", 
-                          f"{chromosome_int}.{end}")
-    # Store the transofrmed tuple in the new dictionary
-    transformed_chromosome_lenghts[chromosome] = transformed_values
-    # Santiy check 
+# Normalize each chromosome's length to a whole number
+normalised_chromosome_lengths = {}
+scaling_factors = {}  # Dictionary to store the scaling factors
+
+for i, (chromosome, (start, end)) in enumerate(chromosome_lengths.items(), start=1):
+    chromosome_length = end - start
+    scaling_factor = 1.0 / chromosome_length  # Calculate the scaling factor
+    scaled_start = i
+    scaled_end = i + chromosome_length * scaling_factor  # Apply the scaling factor
+    normalised_chromosome_lengths[chromosome] = (scaled_start, scaled_end)
+    scaling_factors[chromosome] = scaling_factor  # Store the scaling factor
+
+print(normalised_chromosome_lengths)
+print(f"scaling factors: {scaling_factors}")
 
     
+# # Create a dictionary to map chrommosomenames ot integers
+# chromosome_to_int = {chromosome: i +1 for i, chromosome in enumerate(chromosome_lengths.keys())}
+
+# # Convert and store the transformed chromosome lenght data 
+# transformed_chromosome_lenghts = {}
+# for chromosome, (start, end) in chromosome_lengths.items():
+#     # Get the integer representation of the chromosome name
+#     chromosome_int = chromosome_to_int[chromosome]
+#     # Combine the chromosome number, start and end vlaues as a tuple
+#     transformed_values = (f"{chromosome_int}.{start}", 
+#                           f"{chromosome_int}.{end}")
+#     # Store the transofrmed tuple in the new dictionary
+#     transformed_chromosome_lenghts[chromosome] = transformed_values
+#     # Santiy check 
 
 # Sample data for different datasets
 snp_data = {
-    "chr1": (249200000, 249250621, -0.2),
+    "chr1": (249000000, 249250621, -0.2),
     "chr2": (1, 243199373, 0.3),
     "chr3": (1, 198022430, 0.3),
     # Add data for other chromosomes if needed
+
 }
 
+
+# Scale start and end positions of SNP data based on the scaling factors
+scaled_data = {}
+
+for chromosome, (start, end, value) in snp_data.items():
+    scaling_factor = scaling_factors[chromosome]  # Get the scaling factor for this chromosome
+    scaled_start = start * scaling_factor
+    scaled_end = end * scaling_factor
+    scaled_data[chromosome] = (scaled_start, scaled_end, float(value))
+
+print(f"scaled data = {scaled_data}")
+
 # Convert and store the transformed sample data 
-transformed_data_points = {}
-for chromosome, (start, end, call) in snp_data.items():
+transformed_scaled_data = {}
+for chromosome, (start, end, call) in scaled_data.items():
     # Combine the chromosomes number, start and end, carry call value
-    transformed_values = (f"{chromosome[3:]}.{start}", 
-                          f"{chromosome[3:]}.{end}", f"{call}")
+    transformed_start = float(chromosome[3:]) + start
+    transformed_end = float(chromosome[3:]) + end
+    transformed_values = (transformed_start, transformed_end, float(call))
     # Store the transformed tuples in the new dictionary 
-    transformed_data_points[chromosome] = transformed_values
+    transformed_scaled_data[chromosome] = transformed_values
     # Sanity check
-print(transformed_data_points)
+print(transformed_scaled_data)
 
 
 # Extract the tranformed start values as tick positions 
 tick_positions = [float(start) for start, _ in 
-                  transformed_chromosome_lenghts.values()]
+                  normalised_chromosome_lengths.values()]
 
 
 # Set tjhe tick positions and labels on the x-axis
 ax.set_xticks(tick_positions)
-ax.set_xticklabels(transformed_chromosome_lenghts.keys())
+ax.set_xticklabels(normalised_chromosome_lengths.keys())
+
 
 # Create vertical lines at tick positions
 for position in tick_positions:
-    print(position)
+    # print(position)
     ax.axvline(x=position, color='gray', linestyle='--', linewidth=0.5)
     
 
 
-# Add vertical lines at the end postions of chromosomes
+# # Add vertical lines at the end postions of chromosomes
 
 
 # Set the x axis limits
@@ -139,8 +169,9 @@ ax.axhline(y=0, color='gray', linestyle='--', linewidth=0.5)
 
 
 # # Plot SNP data start, end on X-axis call on the Y axis  
-for chromosome, (start, end, call) in transformed_data_points.items():
+for chromosome, (start, end, call) in transformed_scaled_data.items():
     x_start = float(start)
+    print(x_start)
     x_end =float(end)
     y_value = float(call)
     
