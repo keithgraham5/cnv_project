@@ -72,7 +72,6 @@ chromosome_to_int = {chromosome: i +1 for i, chromosome in enumerate(chromosome_
 
 # Convert and store the transformed chromosome lenght data 
 transformed_chromosome_lenghts = {}
-tick_positions = []
 for chromosome, (start, end) in chromosome_lengths.items():
     # Get the integer representation of the chromosome name
     chromosome_int = chromosome_to_int[chromosome]
@@ -81,10 +80,7 @@ for chromosome, (start, end) in chromosome_lengths.items():
                           f"{chromosome_int}.{end}")
     # Store the transofrmed tuple in the new dictionary
     transformed_chromosome_lenghts[chromosome] = transformed_values
-    #Store the end value as a tick position
-    tick_positions.append(end)
-# Santiy check
-print(transformed_chromosome_lenghts)
+    # Santiy check 
 
     
 
@@ -108,29 +104,27 @@ for chromosome, (start, end, call) in snp_data.items():
 print(transformed_data_points)
 
 
-
-
-
-# # Extract the tranformed start values as tick positions 
-# tick_positions = [float(start) for start, _ in 
-#                   transformed_chromosome_lenghts.values()]
+# Extract the tranformed start values as tick positions 
+tick_positions = [float(start) for start, _ in 
+                  transformed_chromosome_lenghts.values()]
 
 
 # Set tjhe tick positions and labels on the x-axis
 ax.set_xticks(tick_positions)
 ax.set_xticklabels(transformed_chromosome_lenghts.keys())
 
+# Create vertical lines at tick positions
+for position in tick_positions:
+    print(position)
+    ax.axvline(x=position, color='gray', linestyle='--', linewidth=0.5)
+    
+
+
+# Add vertical lines at the end postions of chromosomes
+
+
 # Set the x axis limits
-ax.set_xlim(1.0, 25)  # Adjust the range as needed
-
-# Add vertical lines to the x-axis at end of chromosome 
-for end_position in tick_positions:
-    ax.axvline(x=end_position, color='gray', linestyle='--', linewidth=0.5)
-
-
-# Set labels and title
-ax.set_xlabel("Chromosomes")
-ax.set_title("Chromosome Lengths and End Positions")
+ax.set_xlim(tick_positions[0], tick_positions[-1])  
 
 
 # Set Y-ticks, lables
