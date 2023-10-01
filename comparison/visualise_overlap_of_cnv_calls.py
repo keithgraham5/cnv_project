@@ -94,96 +94,128 @@ def normalise_chromosome_lengths(chromosome_lengths):
     return normalised_chromosome_lengths, scaling_factors
 
 
+def scale_call_data(call_data, scaling_factors):
+    """
+    Scale SNP data based on provided scaling factors.
+
+    This function takes a dictionary of SNP data and a dictionary of scaling factors
+    for each chromosome. It scales the start and end positions of each SNP data point
+    using the corresponding scaling factor and returns a dictionary containing the scaled data.
+
+    Parameters:
+    - snp_data (dict): A dictionary where keys are chromosome names and values are tuples
+      containing (start, end, value) for each SNP data point.
+    - scaling_factors (dict): A dictionary where keys are chromosome names and values are
+      scaling factors used for each chromosome.
+
+    Returns:
+    - dict: A dictionary containing the scaled SNP data with the same structure as snp_data.
+    """
+    # Create an empty dictionary to store the scaled data
+    scaled_data = {}
+    
+    # Loop through each chromosome and its corresponding data
+    for chromosome, (start, end, value) in call_data.items():
+        # Get the scaling factor for this chromosome from the provided dictionary
+        scaling_factor = scaling_factors[chromosome]
+        
+        # Scale the start and end positions using the scaling factor
+        scaled_start = Decimal(start) * scaling_factor
+        scaled_end = Decimal(end) * scaling_factor
+        
+        # Store the scaled data in the dictionary
+        scaled_data[chromosome] = (scaled_start, scaled_end, value)
+    
+    # Return the dictionary containing the scaled data
+    return scaled_data
+
+
+
+normalised_lengths, factors = normalise_chromosome_lengths(chromosome_lengths)
+scaled_results =  scale_call_data(call_data, scaling_factors)
 
 
 
 
 
 
-normalized_lengths, factors = normalize_chromosome_lengths(chromosome_lengths)
 
 
 
 
+# # Scale start and end positions of SNP data based on the scaling factors
+# scaled_data = {}
+# for chromosome, (start, end, value) in snp_data.items():
+#     scaling_factor = scaling_factors[chromosome]  # Get the scaling factor for this chromosome
+#     scaled_start = Decimal(start) * scaling_factor
+#     scaled_end = Decimal(end) * scaling_factor
+#     scaled_data[chromosome] = (scaled_start, scaled_end, value)
+#     print(f"scaled_data = {scaled_data}")
 
 
 
+# # Convert and store the transformed sample data
+# transformed_scaled_data = {}
+# for chromosome, (start, end, call) in scaled_data.items():
+#     transformed_start = Decimal((start)) + Decimal(chromosome_mapping.get(chromosome, chromosome[3:]))
+#     transformed_end = Decimal((end)) + Decimal(chromosome_mapping.get(chromosome, chromosome[3:]))
+#     transformed_scaled_data[chromosome] = (transformed_start, transformed_end, call)
+#     print(transformed_scaled_data)
+# # Sanity check 
+# # print(transformed_scaled_data)
 
 
-
-# Scale start and end positions of SNP data based on the scaling factors
-scaled_data = {}
-for chromosome, (start, end, value) in snp_data.items():
-    scaling_factor = scaling_factors[chromosome]  # Get the scaling factor for this chromosome
-    scaled_start = Decimal(start) * scaling_factor
-    scaled_end = Decimal(end) * scaling_factor
-    scaled_data[chromosome] = (scaled_start, scaled_end, value)
-    print(f"scaled_data = {scaled_data}")
+# # Extract the tranformed start values as tick positions 
+# tick_positions = [float(start) for start, _ in 
+#                   normalised_chromosome_lengths.values()]
 
 
-
-# Convert and store the transformed sample data
-transformed_scaled_data = {}
-for chromosome, (start, end, call) in scaled_data.items():
-    transformed_start = Decimal((start)) + Decimal(chromosome_mapping.get(chromosome, chromosome[3:]))
-    transformed_end = Decimal((end)) + Decimal(chromosome_mapping.get(chromosome, chromosome[3:]))
-    transformed_scaled_data[chromosome] = (transformed_start, transformed_end, call)
-    print(transformed_scaled_data)
-# Sanity check 
-# print(transformed_scaled_data)
+# # Set tjhe tick positions and labels on the x-axis
+# ax.set_xticks(tick_positions)
+# ax.set_xticklabels(normalised_chromosome_lengths.keys())
 
 
-# Extract the tranformed start values as tick positions 
-tick_positions = [float(start) for start, _ in 
-                  normalised_chromosome_lengths.values()]
-
-
-# Set tjhe tick positions and labels on the x-axis
-ax.set_xticks(tick_positions)
-ax.set_xticklabels(normalised_chromosome_lengths.keys())
-
-
-# Create vertical lines at tick positions
-for position in tick_positions:
-    # Sanity check
-    # print(f"tick positions = {position}")
-    ax.axvline(x=position, color='gray', linestyle='--', linewidth=0.5)
+# # Create vertical lines at tick positions
+# for position in tick_positions:
+#     # Sanity check
+#     # print(f"tick positions = {position}")
+#     ax.axvline(x=position, color='gray', linestyle='--', linewidth=0.5)
     
     
 
-# # # Add vertical lines at the end postions of chromosomes
+# # # # Add vertical lines at the end postions of chromosomes
 
 
-# Set the x axis limits with extension to include the Y chromosome 
-ax.set_xlim(tick_positions[0], tick_positions[-1]+1)
-print(tick_positions)
+# # Set the x axis limits with extension to include the Y chromosome 
+# ax.set_xlim(tick_positions[0], tick_positions[-1]+1)
+# print(tick_positions)
 
 
-# Set Y-ticks, lables
-ax.set_yticks([-1, 0, 1])
-ax.set_yticklabels(['CNV losses', '0', 'CNV gains'])
+# # Set Y-ticks, lables
+# ax.set_yticks([-1, 0, 1])
+# ax.set_yticklabels(['CNV losses', '0', 'CNV gains'])
 
-# Set Y-axis limtes to ensure a constant distance from -1, 0, and 1
-ax.set_ylim(-1.0, 1.0)
+# # Set Y-axis limtes to ensure a constant distance from -1, 0, and 1
+# ax.set_ylim(-1.0, 1.0)
 
-# Add a horizontal line at the center of the Y-axis (where '0' is)
-ax.axhline(y=0, color='gray', linestyle='--', linewidth=0.5)
+# # Add a horizontal line at the center of the Y-axis (where '0' is)
+# ax.axhline(y=0, color='gray', linestyle='--', linewidth=0.5)
 
 
-# # Plot SNP data start, end on X-axis call on the Y axis  
-for chromosome, (start, end, call) in transformed_scaled_data.items():
-    x_start = float(start)
-    print(x_start)
-    x_end =float(end)
-    y_value = float(call)
+# # # Plot SNP data start, end on X-axis call on the Y axis  
+# for chromosome, (start, end, call) in transformed_scaled_data.items():
+#     x_start = float(start)
+#     print(x_start)
+#     x_end =float(end)
+#     y_value = float(call)
     
-    # Plot a line segment on the x-axis 
-    ax.plot([x_start, x_end], [y_value, y_value], marker='o', markersize=1)
+#     # Plot a line segment on the x-axis 
+#     ax.plot([x_start, x_end], [y_value, y_value], marker='o', markersize=1)
 
 
 
-# Display the plot
-plt.show()
+# # Display the plot
+# plt.show()
 
 # # Add a horizontal line at the center of the Y-axis (where '0' is)
 # ax.axhline(y=0, color='gray', linestyle='--', linewidth=0.5)
