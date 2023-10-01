@@ -180,6 +180,8 @@ def set_x_axis_ticks_labels_vertical_lines(ax, normalised_chromosome_lengths):
     ax.set_xticklabels(normalised_chromosome_lengths.keys())
     for position in tick_positions:
         ax.axvline(x=position, color='gray', linestyle='--', linewidth=0.5)
+    # Set the x axis limits with extension to include the Y chromosome 
+    ax.set_xlim(tick_positions[0], tick_positions[-1]+1)
     
 
 normalised_lengths, factors = normalise_chromosome_lengths(chromosome_lengths)
@@ -189,24 +191,6 @@ tick_and_labels = set_x_axis_ticks_labels_vertical_lines(ax, normalised_chromoso
 print(f"normalised lengths = {normalised_lengths}")
 print(f"scaled_results are {scaled_results}")
 print(f" transfored results are {transformed_results}")
-
-
-
-# # Create vertical lines at tick positions
-# for position in tick_positions:
-#     # Sanity check
-#     # print(f"tick positions = {position}")
-#     ax.axvline(x=position, color='gray', linestyle='--', linewidth=0.5)
-    
-    
-
-# # # # Add vertical lines at the end postions of chromosomes
-
-
-# # Set the x axis limits with extension to include the Y chromosome 
-# ax.set_xlim(tick_positions[0], tick_positions[-1]+1)
-# print(tick_positions)
-
 
 # # Set Y-ticks, lables
 # ax.set_yticks([-1, 0, 1])
