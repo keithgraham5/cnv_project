@@ -33,6 +33,8 @@ chromosome_lengths = {
     "chrY": (1, 59373566),
 }
 
+
+
 # Sample data for different datasets
 call_data = {
     "chr1": (200000, 149000000, -0.2),
@@ -78,10 +80,6 @@ chromosome_mapping = {
     "chrY": "24",
 }
 
-normalised_chromosome_lengths = {}
-scaling_factors = {}
-scaled_data = {}
-transformed_scaled_data = {}
 
 def normalise_chromosome_lengths(chromosome_lengths):
     """
@@ -94,7 +92,8 @@ def normalise_chromosome_lengths(chromosome_lengths):
         tuple: A tuple containing two dictionaries: normalised_chromosome_lengths
         and scaling_factors.
     """
-    
+    normalised_chromosome_lengths = {}
+    scaling_factors = {}
 
     for i, (chromosome, (start, end)) in enumerate(chromosome_lengths.items(), start=1):
         chromosome_length = end - start
@@ -109,7 +108,7 @@ def normalise_chromosome_lengths(chromosome_lengths):
 
 def scale_call_data(call_data, scaling_factors):
     """
-    Scale SNP data based on provided scaling factors.
+    Scale call data based on provided scaling factors.
 
     This function takes a dictionary of SNP data and a dictionary of scaling factors
     for each chromosome. It scales the start and end positions of each SNP data point
@@ -125,6 +124,7 @@ def scale_call_data(call_data, scaling_factors):
     - dict: A dictionary containing the scaled SNP data with the same structure as snp_data.
     """
     # Create an empty dictionary to store the scaled data
+    scaled_data = {}
     
     # Loop through each chromosome and its corresponding data
     for chromosome, (start, end, value) in call_data.items():
@@ -153,7 +153,7 @@ def transform_and_store_data(scaled_data, chromosome_mapping):
     Returns:
         dict: A dictionary containing the transformed and stored data.
     """
-    
+    transformed_scaled_data = {}
 
     for chromosome, (start, end, call) in scaled_data.items():
         transformed_start = Decimal(start) + Decimal(chromosome_mapping.get(chromosome, chromosome[3:]))
@@ -219,18 +219,18 @@ def plot_call_data(ax, transformed_scaled_data):
         # Plot a line segment on the x-axis
         ax.plot([x_start, x_end], [y_value, y_value], marker='o', markersize=1)
     
-
-normalised_lengths, factors = normalise_chromosome_lengths(chromosome_lengths)
-scaled_results =  scale_call_data(call_data, scaling_factors)
-transformed_results = transform_and_store_data(scaled_data, chromosome_mapping)
+# Noralise chromosome lengths and calculate scaling factors 
+normalised_chromosome_lengths, scaling_factors = normalise_chromosome_lengths(chromosome_lengths)
+# Scale the call data using scaling factors derived from normlaisation of chromosome lengths
+scaled_data =  scale_call_data(call_data, scaling_factors)
+# Transform and store the scaled data
+transformed_scaled_data = transform_and_store_data(scaled_data, chromosome_mapping)
+# Set X-axis ticks, labels, and vertical lines
 x_tick_and_labels = set_x_axis_ticks_labels_vertical_lines(ax, normalised_chromosome_lengths)
+# Set Y-axis ticks, labels, limits, and horizontal line
 y_tick_and_lables = set_y_axis_ticks_labels_lines(ax)
+# Plot the call data
 plots = plot_call_data(ax, transformed_scaled_data)
-
-print(f"normalised lengths = {normalised_lengths}")
-print(f"scaled_results are {scaled_results}")
-print(f" transfored results are {transformed_results}")
-
 
 # Display the plot
 plt.show()
