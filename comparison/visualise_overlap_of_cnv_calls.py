@@ -78,6 +78,8 @@ chromosome_mapping = {
     "chrY": "24",
 }
 
+scaling_factors = {}
+
 def normalise_chromosome_lengths(chromosome_lengths):
     """
     Normalize each chromosome's length to a whole number.
@@ -90,7 +92,6 @@ def normalise_chromosome_lengths(chromosome_lengths):
         and scaling_factors.
     """
     normalised_chromosome_lengths = {}
-    scaling_factors = {}
 
     for i, (chromosome, (start, end)) in enumerate(chromosome_lengths.items(), start=1):
         chromosome_length = end - start
@@ -98,7 +99,7 @@ def normalise_chromosome_lengths(chromosome_lengths):
         scaled_start = Decimal(i)
         scaled_end = scaled_start + Decimal(chromosome_length) * scaling_factor
         normalised_chromosome_lengths[chromosome] = (scaled_start, scaled_end)
-        scaling_factors[chromosome] = scaling_factor
+        scaling_factors[chromosome] = scaling_factor  # Update the global scaling_factors
 
     return normalised_chromosome_lengths, scaling_factors
 
