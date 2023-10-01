@@ -81,6 +81,7 @@ chromosome_mapping = {
 normalised_chromosome_lengths = {}
 scaling_factors = {}
 scaled_data = {}
+transformed_scaled_data = {}
 
 def normalise_chromosome_lengths(chromosome_lengths):
     """
@@ -152,7 +153,7 @@ def transform_and_store_data(scaled_data, chromosome_mapping):
     Returns:
         dict: A dictionary containing the transformed and stored data.
     """
-    transformed_scaled_data = {}
+    
 
     for chromosome, (start, end, call) in scaled_data.items():
         transformed_start = Decimal(start) + Decimal(chromosome_mapping.get(chromosome, chromosome[3:]))
@@ -198,12 +199,33 @@ def set_y_axis_ticks_labels_lines(ax):
     # Add a horizontal line at the center of the Y-axis (where '0' is
     ax.axhline(y=0, color='gray', linestyle='--', linewidth=0.5)
     
+def plot_call_data(ax, transformed_scaled_data):
+    """
+    Plot call data on the given Matplotlib axis.
+
+    Args:
+        ax (matplotlib.axes._axes.Axes): The Matplotlib axis on which to plot 
+        the data. transformed_scaled_data (dict): A dictionary containing 
+        transformed and scaled call data.
+
+    Returns:
+        None
+    """
+    for chromosome, (start, end, call) in transformed_scaled_data.items():
+        x_start = float(start)
+        x_end = float(end)
+        y_value = float(call)
+        
+        # Plot a line segment on the x-axis
+        ax.plot([x_start, x_end], [y_value, y_value], marker='o', markersize=1)
+    
 
 normalised_lengths, factors = normalise_chromosome_lengths(chromosome_lengths)
 scaled_results =  scale_call_data(call_data, scaling_factors)
 transformed_results = transform_and_store_data(scaled_data, chromosome_mapping)
 x_tick_and_labels = set_x_axis_ticks_labels_vertical_lines(ax, normalised_chromosome_lengths)
 y_tick_and_lables = set_y_axis_ticks_labels_lines(ax)
+plots = plot_call_data(ax, transformed_scaled_data)
 
 print(f"normalised lengths = {normalised_lengths}")
 print(f"scaled_results are {scaled_results}")
