@@ -183,11 +183,28 @@ def set_x_axis_ticks_labels_vertical_lines(ax, normalised_chromosome_lengths):
     # Set the x axis limits with extension to include the Y chromosome 
     ax.set_xlim(tick_positions[0], tick_positions[-1]+1)
     
+def set_y_axis_ticks_labels_lines(ax):
+    """
+    Set the Y-ticks, labels, limits, and add a horizontal line at the center of the Y-axis.
+
+    Args:
+        ax (matplotlib.axes._axes.Axes): The Matplotlib axis on which to set Y-axis properties.
+    """
+    # Set Y-ticks, lables
+    ax.set_yticks([-1, 0, 1])
+    ax.set_yticklabels(['CNV losses', '0', 'CNV gains'])
+    # Set Y-axis limtes to ensure a constant distance from -1, 0, and 1
+    ax.set_ylim(-1.0, 1.0)
+    # Add a horizontal line at the center of the Y-axis (where '0' is
+    ax.axhline(y=0, color='gray', linestyle='--', linewidth=0.5)
+    
 
 normalised_lengths, factors = normalise_chromosome_lengths(chromosome_lengths)
 scaled_results =  scale_call_data(call_data, scaling_factors)
 transformed_results = transform_and_store_data(scaled_data, chromosome_mapping)
-tick_and_labels = set_x_axis_ticks_labels_vertical_lines(ax, normalised_chromosome_lengths)
+x_tick_and_labels = set_x_axis_ticks_labels_vertical_lines(ax, normalised_chromosome_lengths)
+y_tick_and_lables = set_y_axis_ticks_labels_lines(ax)
+
 print(f"normalised lengths = {normalised_lengths}")
 print(f"scaled_results are {scaled_results}")
 print(f" transfored results are {transformed_results}")
