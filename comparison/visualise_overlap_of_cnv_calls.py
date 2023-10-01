@@ -3,40 +3,6 @@ import mplcursors  # Import mplcursors
 import numpy as np
 
 # Create a figure and axis
-# fig, ax = plt.subplots()
-
-# Define chromosome lengths (you can customize this based on your data)
-# chromosome_lengths = {
-#     "chr1": (1, 249250621),
-#     "chr2": (1, 243199373),
-#     "chr3": (1, 198022430),
-#     "chr4": (1, 191154276),
-#     "chr5": (1, 180915260),
-#     "chr6": (1, 171115067),
-#     "chr7": (1, 159138663),
-#     "chr8": (1, 146364022),
-#     "chr9": (1, 141213431),
-#     "chr10": (1, 135534747),
-#     "chr11": (1, 135006516),
-#     "chr12": (1, 133851895),
-#     "chr13": (1, 115169878),
-#     "chr14": (1, 107349540),
-#     "chr15": (1, 102531392),
-#     "chr16": (1, 90354753),
-#     "chr17": (1, 81195210),
-#     "chr18": (1, 78077248),
-#     "chr19": (1, 59128983),
-#     "chr20": (1, 63025520),
-#     "chr21": (1, 48129895),
-#     "chr22": (1, 51304566),
-#     "chrX": (1, 155270560),
-#     "chrY": (1, 59373566),
-# }
-
-import matplotlib.pyplot as plt
-import mplcursors  # Import mplcursors
-
-# Create a figure and axis
 fig, ax = plt.subplots()
 
 # Define chromosome lengths (you can customize this based on your data)
@@ -79,9 +45,9 @@ for i, (chromosome, (start, end)) in enumerate(chromosome_lengths.items(), start
     scaled_end = i + chromosome_length * scaling_factor  # Apply the scaling factor
     normalised_chromosome_lengths[chromosome] = (scaled_start, scaled_end)
     scaling_factors[chromosome] = scaling_factor  # Store the scaling factor
-
-print(normalised_chromosome_lengths)
-print(f"scaling factors: {scaling_factors}")
+# Sanity Check
+# print(normalised_chromosome_lengths)
+# print(f"scaling factors: {scaling_factors}")
 
     
 # # Create a dictionary to map chrommosomenames ot integers
@@ -104,6 +70,8 @@ snp_data = {
     "chr1": (249000000, 249250621, -0.2),
     "chr2": (1, 243199373, 0.3),
     "chr3": (1, 198022430, 0.3),
+    "chrX": (1,155270560, 0.1),
+    "chrY": (1, 59373566, 0.12)
     # Add data for other chromosomes if needed
 
 }
@@ -117,20 +85,23 @@ for chromosome, (start, end, value) in snp_data.items():
     scaled_start = start * scaling_factor
     scaled_end = end * scaling_factor
     scaled_data[chromosome] = (scaled_start, scaled_end, float(value))
+# Sanity check
+# print(f"scaled data = {scaled_data}")
 
-print(f"scaled data = {scaled_data}")
+# Define a mapping for 'X' and 'Y'
+chromosome_mapping = {
+    "chrX": "23",
+    "chrY": "24",
+}
 
-# Convert and store the transformed sample data 
+# Convert and store the transformed sample data
 transformed_scaled_data = {}
-for chromosome, (start, end, call) in scaled_data.items():
-    # Combine the chromosomes number, start and end, carry call value
-    transformed_start = float(chromosome[3:]) + start
-    transformed_end = float(chromosome[3:]) + end
-    transformed_values = (transformed_start, transformed_end, float(call))
-    # Store the transformed tuples in the new dictionary 
-    transformed_scaled_data[chromosome] = transformed_values
-    # Sanity check
-print(transformed_scaled_data)
+for chromosome, (start, end, call) in snp_data.items():
+    transformed_start = chromosome_mapping.get(chromosome, chromosome[3:])
+    transformed_end = f"{transformed_start}.{end}"  # Add transformed_start to the end
+    transformed_scaled_data[chromosome] = (transformed_start, transformed_end, call)
+# Sanity check 
+# print(transformed_scaled_data)
 
 
 # Extract the tranformed start values as tick positions 
@@ -145,16 +116,18 @@ ax.set_xticklabels(normalised_chromosome_lengths.keys())
 
 # Create vertical lines at tick positions
 for position in tick_positions:
+    # Sanity check
     # print(position)
     ax.axvline(x=position, color='gray', linestyle='--', linewidth=0.5)
     
-
+    
 
 # # Add vertical lines at the end postions of chromosomes
 
 
-# Set the x axis limits
-ax.set_xlim(tick_positions[0], tick_positions[-1])  
+# Set the x axis limits with extension to include the Y chromosome 
+ax.set_xlim(tick_positions[0], tick_positions[-1]+1)
+print(tick_positions)
 
 
 # Set Y-ticks, lables
