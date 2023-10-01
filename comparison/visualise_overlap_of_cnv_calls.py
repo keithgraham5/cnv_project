@@ -231,80 +231,10 @@ print(f"normalised lengths = {normalised_lengths}")
 print(f"scaled_results are {scaled_results}")
 print(f" transfored results are {transformed_results}")
 
-# # Set Y-ticks, lables
-# ax.set_yticks([-1, 0, 1])
-# ax.set_yticklabels(['CNV losses', '0', 'CNV gains'])
-
-# # Set Y-axis limtes to ensure a constant distance from -1, 0, and 1
-# ax.set_ylim(-1.0, 1.0)
-
-# # Add a horizontal line at the center of the Y-axis (where '0' is)
-# ax.axhline(y=0, color='gray', linestyle='--', linewidth=0.5)
-
-
-# # # Plot SNP data start, end on X-axis call on the Y axis  
-# for chromosome, (start, end, call) in transformed_scaled_data.items():
-#     x_start = float(start)
-#     print(x_start)
-#     x_end =float(end)
-#     y_value = float(call)
-    
-#     # Plot a line segment on the x-axis 
-#     ax.plot([x_start, x_end], [y_value, y_value], marker='o', markersize=1)
-
-
 
 # Display the plot
 plt.show()
 
-# # Add a horizontal line at the center of the Y-axis (where '0' is)
-# ax.axhline(y=0, color='gray', linestyle='--', linewidth=0.5)
-
-# # Set Y-axis limits to ensure a constant distance from -1, 0, and 1
-# ax.set_ylim(-1.0, 1.0)
-
-# # Set chromosome labels and limits on the X-axis
-# chromosome_ticks = []
-# chromosome_labels = []
-# chromosome_end_lines = []
-# chromosome_start_lines = []
-
-# current_position = 0
-
-# for chromosome, (start, end) in chromosome_lengths.items():
-#     chromosome_length = end - start
-#     chromosome_ticks.append(current_position + (chromosome_length / 2))  # Place the label in the middle of each chromosome
-#     chromosome_labels.append(chromosome)
-#     chromosome_start_lines.append(current_position)
-#     chromosome_end_lines.append(current_position + chromosome_length)
-#     current_position += chromosome_length
-# print(f"chr_start_lines are {chromosome_start_lines}")
-# print(f"chr_end_lines are {chromosome_end_lines}")
-# ax.set_xticks(chromosome_ticks)
-# ax.set_xticklabels(chromosome_labels, rotation=0, ha='center')
-
-# # Set X-axis limits
-# ax.set_xlim(0, current_position)
-
-# # Draw vertical lines at chromosome ends
-# for x_pos in chromosome_end_lines:
-#     ax.axvline(x_pos, color='gray', linestyle='--', linewidth=0.5)
-
-# # Plot SNP data with tooltips
-# for chromosome, data_points in snp_data.items():
-#     for start, end, value in data_points:
-#         chromosome_length = chromosome_lengths[chromosome][1] - chromosome_lengths[chromosome][0]
-#         x_position = current_position * ((start - chromosome_lengths[chromosome][0]) / chromosome_length) + chromosome_start_lines[chromosome_labels.index(chromosome)]
-#         scatter = ax.scatter(x_position, value, marker='o', color='blue', alpha=0.5, label='SNP Data')
-#         mplcursors.cursor(scatter).connect(
-#             "add", lambda sel, chromosome=chromosome, start=start, end=end, value=value: sel.annotation.set_text(f"Chromosome: {chromosome}\nStart: {start}\nEnd: {end}\nValue: {value}"))
-
-# # Set labels and title
-# ax.set_xlabel("Chromosomes")
-# ax.set_title("CNV Calls on Chromosomes")
-
-# # Move the legend inside the graph to the upper right corner
-# ax.legend(loc='upper right')
 
 
 
