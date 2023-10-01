@@ -78,6 +78,7 @@ chromosome_mapping = {
     "chrY": "24",
 }
 
+normalised_chromosome_lengths = {}
 scaling_factors = {}
 scaled_data = {}
 
@@ -92,7 +93,7 @@ def normalise_chromosome_lengths(chromosome_lengths):
         tuple: A tuple containing two dictionaries: normalised_chromosome_lengths
         and scaling_factors.
     """
-    normalised_chromosome_lengths = {}
+    
 
     for i, (chromosome, (start, end)) in enumerate(chromosome_lengths.items(), start=1):
         chromosome_length = end - start
@@ -161,31 +162,30 @@ def transform_and_store_data(scaled_data, chromosome_mapping):
     return transformed_scaled_data
 
 
-def extract_tick_positions(normalised_chromosome_lengths):
+def set_x_axis_ticks_and_labels(ax, normalised_chromosome_lengths):
     """
-    Extract transformed start values as tick positions.
+    Set the tick positions and labels on the x-axis of a given Matplotlib axis.
 
     Args:
-        normalised_chromosome_lengths (dict): A dictionary containing normalised chromosome lengths.
-
-    Returns:
-        list: A list of tick positions (transformed start values).
+        ax (matplotlib.axes._axes.Axes): The Matplotlib axis on which to set the ticks and labels.
+        normalised_chromosome_lengths (dict): A dictionary containing chromosome lengths and their
+            corresponding scaled positions.
     """
+    # Extract the transformed start values as tick positions
     tick_positions = [float(start) for start, _ in normalised_chromosome_lengths.values()]
-    return tick_positions
 
+    # Set the tick positions and labels on the x-axis
+    ax.set_xticks(tick_positions)
+    ax.set_xticklabels(normalised_chromosome_lengths.keys())
+    
 normalised_lengths, factors = normalise_chromosome_lengths(chromosome_lengths)
 scaled_results =  scale_call_data(call_data, scaling_factors)
 transformed_results = transform_and_store_data(scaled_data, chromosome_mapping)
-tick_positions = extract_tick_positions(normalised_chromosome_lengths)
+tick_and_labels = set_x_axis_ticks_and_labels(ax, normalised_chromosome_lengths)
 print(f"normalised lengths = {normalised_lengths}")
 print(f"scaled_results are {scaled_results}")
 print(f" transfored results are {transformed_results}")
 
-
-# # Set tjhe tick positions and labels on the x-axis
-# ax.set_xticks(tick_positions)
-# ax.set_xticklabels(normalised_chromosome_lengths.keys())
 
 
 # # Create vertical lines at tick positions
