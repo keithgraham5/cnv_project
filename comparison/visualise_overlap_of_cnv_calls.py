@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 import mplcursors  # Import mplcursors
-import numpy as np
+from decimal import Decimal
 
 # Create a figure and axis
 fig, ax = plt.subplots()
@@ -33,60 +33,36 @@ chromosome_lengths = {
     "chrY": (1, 59373566),
 }
 
-
 # Normalize each chromosome's length to a whole number
 normalised_chromosome_lengths = {}
 scaling_factors = {}  # Dictionary to store the scaling factors
 
 for i, (chromosome, (start, end)) in enumerate(chromosome_lengths.items(), start=1):
     chromosome_length = end - start
-    scaling_factor = 1.0 / chromosome_length  # Calculate the scaling factor
-    scaled_start = i
-    scaled_end = i + chromosome_length * scaling_factor  # Apply the scaling factor
+    scaling_factor = Decimal(1) / Decimal(chromosome_length)  # Calculate the scaling factor as Decimal
+    scaled_start = Decimal(i)
+    scaled_end = scaled_start + Decimal(chromosome_length) * scaling_factor  # Apply the scaling factor
     normalised_chromosome_lengths[chromosome] = (scaled_start, scaled_end)
     scaling_factors[chromosome] = scaling_factor  # Store the scaling factor
-# Sanity Check
-# print(normalised_chromosome_lengths)
-# print(f"scaling factors: {scaling_factors}")
-
-    
-# # Create a dictionary to map chrommosomenames ot integers
-# chromosome_to_int = {chromosome: i +1 for i, chromosome in enumerate(chromosome_lengths.keys())}
-
-# # Convert and store the transformed chromosome lenght data 
-# transformed_chromosome_lenghts = {}
-# for chromosome, (start, end) in chromosome_lengths.items():
-#     # Get the integer representation of the chromosome name
-#     chromosome_int = chromosome_to_int[chromosome]
-#     # Combine the chromosome number, start and end vlaues as a tuple
-#     transformed_values = (f"{chromosome_int}.{start}", 
-#                           f"{chromosome_int}.{end}")
-#     # Store the transofrmed tuple in the new dictionary
-#     transformed_chromosome_lenghts[chromosome] = transformed_values
-#     # Santiy check 
 
 # Sample data for different datasets
 snp_data = {
-    "chr1": (249000000, 249250621, -0.2),
-    "chr2": (1, 243199373, 0.3),
+    "chr1": (200000, 149000000, -0.2),
+    "chr2": (1, 143199373, 0.3),
     "chr3": (1, 198022430, 0.3),
-    "chrX": (1,155270560, 0.1),
-    "chrY": (1, 59373566, 0.12)
+    "chrX": (1,75270560, 0.1),
+    "chrY": (1, 19373566, 0.12)
     # Add data for other chromosomes if needed
-
 }
-
 
 # Scale start and end positions of SNP data based on the scaling factors
 scaled_data = {}
-
 for chromosome, (start, end, value) in snp_data.items():
     scaling_factor = scaling_factors[chromosome]  # Get the scaling factor for this chromosome
-    scaled_start = start * scaling_factor
-    scaled_end = end * scaling_factor
-    scaled_data[chromosome] = (scaled_start, scaled_end, float(value))
-# Sanity check
-# print(f"scaled data = {scaled_data}")
+    scaled_start = Decimal(start) * scaling_factor
+    scaled_end = Decimal(end) * scaling_factor
+    scaled_data[chromosome] = (scaled_start, scaled_end, value)
+    print(f"scaled_data = {scaled_data}")
 
 # Define a mapping for 'X' and 'Y'
 chromosome_mapping = {
@@ -96,10 +72,11 @@ chromosome_mapping = {
 
 # Convert and store the transformed sample data
 transformed_scaled_data = {}
-for chromosome, (start, end, call) in snp_data.items():
-    transformed_start = chromosome_mapping.get(chromosome, chromosome[3:])
-    transformed_end = f"{transformed_start}.{end}"  # Add transformed_start to the end
+for chromosome, (start, end, call) in scaled_data.items():
+    transformed_start = Decimal((start)) + Decimal(chromosome_mapping.get(chromosome, chromosome[3:]))
+    transformed_end = Decimal((end)) + Decimal(chromosome_mapping.get(chromosome, chromosome[3:]))
     transformed_scaled_data[chromosome] = (transformed_start, transformed_end, call)
+    print(transformed_scaled_data)
 # Sanity check 
 # print(transformed_scaled_data)
 
@@ -117,12 +94,12 @@ ax.set_xticklabels(normalised_chromosome_lengths.keys())
 # Create vertical lines at tick positions
 for position in tick_positions:
     # Sanity check
-    # print(position)
+    # print(f"tick positions = {position}")
     ax.axvline(x=position, color='gray', linestyle='--', linewidth=0.5)
     
     
 
-# # Add vertical lines at the end postions of chromosomes
+# # # Add vertical lines at the end postions of chromosomes
 
 
 # Set the x axis limits with extension to include the Y chromosome 
