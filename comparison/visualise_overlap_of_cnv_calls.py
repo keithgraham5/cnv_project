@@ -162,26 +162,30 @@ def transform_and_store_data(scaled_data, chromosome_mapping):
     return transformed_scaled_data
 
 
-def set_x_axis_ticks_and_labels(ax, normalised_chromosome_lengths):
+def set_x_axis_ticks_labels_vertical_lines(ax, normalised_chromosome_lengths):
     """
-    Set the tick positions and labels on the x-axis of a given Matplotlib axis.
+    Set the tick positions, labels and vertical lines on the x-axis of a given 
+    x axis.
 
     Args:
-        ax (matplotlib.axes._axes.Axes): The Matplotlib axis on which to set the ticks and labels.
-        normalised_chromosome_lengths (dict): A dictionary containing chromosome lengths and their
-            corresponding scaled positions.
+        ax (matplotlib.axes._axes.Axes): The Matplotlib axis on which to set the
+        ticks and labels. normalised_chromosome_lengths (dict): A dictionary 
+        containing chromosome lengths and their corresponding scaled positions.
     """
     # Extract the transformed start values as tick positions
     tick_positions = [float(start) for start, _ in normalised_chromosome_lengths.values()]
 
-    # Set the tick positions and labels on the x-axis
+    # Set the tick positions, labels and vertical lines on the x-axis
     ax.set_xticks(tick_positions)
     ax.set_xticklabels(normalised_chromosome_lengths.keys())
+    for position in tick_positions:
+        ax.axvline(x=position, color='gray', linestyle='--', linewidth=0.5)
     
+
 normalised_lengths, factors = normalise_chromosome_lengths(chromosome_lengths)
 scaled_results =  scale_call_data(call_data, scaling_factors)
 transformed_results = transform_and_store_data(scaled_data, chromosome_mapping)
-tick_and_labels = set_x_axis_ticks_and_labels(ax, normalised_chromosome_lengths)
+tick_and_labels = set_x_axis_ticks_labels_vertical_lines(ax, normalised_chromosome_lengths)
 print(f"normalised lengths = {normalised_lengths}")
 print(f"scaled_results are {scaled_results}")
 print(f" transfored results are {transformed_results}")
