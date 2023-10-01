@@ -161,33 +161,26 @@ def transform_and_store_data(scaled_data, chromosome_mapping):
     return transformed_scaled_data
 
 
+def extract_tick_positions(normalised_chromosome_lengths):
+    """
+    Extract transformed start values as tick positions.
+
+    Args:
+        normalised_chromosome_lengths (dict): A dictionary containing normalised chromosome lengths.
+
+    Returns:
+        list: A list of tick positions (transformed start values).
+    """
+    tick_positions = [float(start) for start, _ in normalised_chromosome_lengths.values()]
+    return tick_positions
 
 normalised_lengths, factors = normalise_chromosome_lengths(chromosome_lengths)
 scaled_results =  scale_call_data(call_data, scaling_factors)
 transformed_results = transform_and_store_data(scaled_data, chromosome_mapping)
+tick_positions = extract_tick_positions(normalised_chromosome_lengths)
 print(f"normalised lengths = {normalised_lengths}")
 print(f"scaled_results are {scaled_results}")
 print(f" transfored results are {transformed_results}")
-
-
-
-
-
-
-# # Convert and store the transformed sample data
-# transformed_scaled_data = {}
-# for chromosome, (start, end, call) in scaled_data.items():
-#     transformed_start = Decimal((start)) + Decimal(chromosome_mapping.get(chromosome, chromosome[3:]))
-#     transformed_end = Decimal((end)) + Decimal(chromosome_mapping.get(chromosome, chromosome[3:]))
-#     transformed_scaled_data[chromosome] = (transformed_start, transformed_end, call)
-#     print(transformed_scaled_data)
-# # Sanity check 
-# # print(transformed_scaled_data)
-
-
-# # Extract the tranformed start values as tick positions 
-# tick_positions = [float(start) for start, _ in 
-#                   normalised_chromosome_lengths.values()]
 
 
 # # Set tjhe tick positions and labels on the x-axis
