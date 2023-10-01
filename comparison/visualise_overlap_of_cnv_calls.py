@@ -33,45 +33,6 @@ chromosome_lengths = {
     "chrY": (1, 59373566),
 }
 
-def normalise_chromosome_lengths(chromosome_lengths):
-    """
-    Normalize each chromosome's length to a whole number.
-    
-    Args:
-        chromosome_lengths (dict): A dictionary containing chromosome lengths.
-
-    Returns:
-        tuple: A tuple containing two dictionaries: normalised_chromosome_lengths
-        and scaling_factors.
-    """
-    normalised_chromosome_lengths = {}
-    scaling_factors = {}
-
-    for i, (chromosome, (start, end)) in enumerate(chromosome_lengths.items(), start=1):
-        chromosome_length = end - start
-        scaling_factor = Decimal(1) / Decimal(chromosome_length)
-        scaled_start = Decimal(i)
-        scaled_end = scaled_start + Decimal(chromosome_length) * scaling_factor
-        normalised_chromosome_lengths[chromosome] = (scaled_start, scaled_end)
-        scaling_factors[chromosome] = scaling_factor
-
-    return normalised_chromosome_lengths, scaling_factors
-
-# Example usage:
-chromosome_lengths = {
-    "chr1": (1, 249250621),
-    # Add data for other chromosomes if needed
-}
-
-normalized_lengths, factors = normalize_chromosome_lengths(chromosome_lengths)
-print(normalized_lengths)
-print(factors)
-
-
-
-
-
-
 
 # Sample data for different datasets
 snp_data = {
@@ -101,6 +62,48 @@ cnvrobot_data = {
     "chrY": (1, 19373566, 0.12)
     # Add data for other chromosomes if needed
 }
+
+def normalise_chromosome_lengths(chromosome_lengths):
+    """
+    Normalize each chromosome's length to a whole number.
+    
+    Args:
+        chromosome_lengths (dict): A dictionary containing chromosome lengths.
+
+    Returns:
+        tuple: A tuple containing two dictionaries: normalised_chromosome_lengths
+        and scaling_factors.
+    """
+    normalised_chromosome_lengths = {}
+    scaling_factors = {}
+
+    for i, (chromosome, (start, end)) in enumerate(chromosome_lengths.items(), start=1):
+        chromosome_length = end - start
+        scaling_factor = Decimal(1) / Decimal(chromosome_length)
+        scaled_start = Decimal(i)
+        scaled_end = scaled_start + Decimal(chromosome_length) * scaling_factor
+        normalised_chromosome_lengths[chromosome] = (scaled_start, scaled_end)
+        scaling_factors[chromosome] = scaling_factor
+
+    return normalised_chromosome_lengths, scaling_factors
+
+
+
+
+
+
+
+
+normalized_lengths, factors = normalize_chromosome_lengths(chromosome_lengths)
+
+
+
+
+
+
+
+
+
 
 # Scale start and end positions of SNP data based on the scaling factors
 scaled_data = {}
