@@ -63,6 +63,12 @@ cnvrobot_data = {
     # Add data for other chromosomes if needed
 }
 
+# Define a mapping for 'X' and 'Y'
+chromosome_mapping = {
+    "chrX": "23",
+    "chrY": "24",
+}
+
 def normalise_chromosome_lengths(chromosome_lengths):
     """
     Normalize each chromosome's length to a whole number.
@@ -114,11 +120,7 @@ for chromosome, (start, end, value) in snp_data.items():
     scaled_data[chromosome] = (scaled_start, scaled_end, value)
     print(f"scaled_data = {scaled_data}")
 
-# Define a mapping for 'X' and 'Y'
-chromosome_mapping = {
-    "chrX": "23",
-    "chrY": "24",
-}
+
 
 # Convert and store the transformed sample data
 transformed_scaled_data = {}
