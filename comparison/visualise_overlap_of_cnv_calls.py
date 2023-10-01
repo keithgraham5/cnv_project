@@ -165,9 +165,10 @@ def transform_and_store_data(scaled_data, chromosome_mapping):
 normalised_lengths, factors = normalise_chromosome_lengths(chromosome_lengths)
 scaled_results =  scale_call_data(call_data, scaling_factors)
 transformed_results = transform_and_store_data(scaled_data, chromosome_mapping)
-print(normalised_lengths)
-print(scaled_results)
-print(transformed_results)
+print(f"normalised lengths = {normalised_lengths}")
+print(f"scaled_results are {scaled_results}")
+print(f" transfored results are {transformed_results}")
+
 
 
 
