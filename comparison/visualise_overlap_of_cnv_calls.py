@@ -33,6 +33,15 @@ chromosome_lengths = {
     "chrY": (1, 59373566),
 }
 
+# Sample data for different datasets
+call_data = {
+    "chr1": (200000, 149000000, -0.2),
+    "chr2": (1, 143199373, 0.3),
+    "chr3": (1, 198022430, 0.3),
+    "chrX": (1,75270560, 0.1),
+    "chrY": (1, 19373566, 0.12)
+    # Add data for other chromosomes if needed
+}
 
 # Sample data for different datasets
 snp_data = {
