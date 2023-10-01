@@ -79,6 +79,7 @@ chromosome_mapping = {
 }
 
 scaling_factors = {}
+scaled_data = {}
 
 def normalise_chromosome_lengths(chromosome_lengths):
     """
@@ -122,7 +123,6 @@ def scale_call_data(call_data, scaling_factors):
     - dict: A dictionary containing the scaled SNP data with the same structure as snp_data.
     """
     # Create an empty dictionary to store the scaled data
-    scaled_data = {}
     
     # Loop through each chromosome and its corresponding data
     for chromosome, (start, end, value) in call_data.items():
@@ -140,27 +140,36 @@ def scale_call_data(call_data, scaling_factors):
     return scaled_data
 
 
+def transform_and_store_data(scaled_data, chromosome_mapping):
+    """
+    Transform and store the scaled sample data.
+
+    Args:
+        scaled_data (dict): A dictionary containing the scaled data.
+        chromosome_mapping (dict): A dictionary mapping chromosome names to their transformed values.
+
+    Returns:
+        dict: A dictionary containing the transformed and stored data.
+    """
+    transformed_scaled_data = {}
+
+    for chromosome, (start, end, call) in scaled_data.items():
+        transformed_start = Decimal(start) + Decimal(chromosome_mapping.get(chromosome, chromosome[3:]))
+        transformed_end = Decimal(end) + Decimal(chromosome_mapping.get(chromosome, chromosome[3:]))
+        transformed_scaled_data[chromosome] = (transformed_start, transformed_end, call)
+
+    return transformed_scaled_data
+
+
 
 normalised_lengths, factors = normalise_chromosome_lengths(chromosome_lengths)
 scaled_results =  scale_call_data(call_data, scaling_factors)
+transformed_results = transform_and_store_data(scaled_data, chromosome_mapping)
+print(normalised_lengths)
+print(scaled_results)
+print(transformed_results)
 
 
-
-
-
-
-
-
-
-
-# # Scale start and end positions of SNP data based on the scaling factors
-# scaled_data = {}
-# for chromosome, (start, end, value) in snp_data.items():
-#     scaling_factor = scaling_factors[chromosome]  # Get the scaling factor for this chromosome
-#     scaled_start = Decimal(start) * scaling_factor
-#     scaled_end = Decimal(end) * scaling_factor
-#     scaled_data[chromosome] = (scaled_start, scaled_end, value)
-#     print(f"scaled_data = {scaled_data}")
 
 
 
