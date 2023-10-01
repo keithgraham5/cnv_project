@@ -33,21 +33,68 @@ chromosome_lengths = {
     "chrY": (1, 59373566),
 }
 
-# Normalize each chromosome's length to a whole number
-normalised_chromosome_lengths = {}
-scaling_factors = {}  # Dictionary to store the scaling factors
+def normalise_chromosome_lengths(chromosome_lengths):
+    """
+    Normalize each chromosome's length to a whole number.
+    
+    Args:
+        chromosome_lengths (dict): A dictionary containing chromosome lengths.
 
-for i, (chromosome, (start, end)) in enumerate(chromosome_lengths.items(), start=1):
-    chromosome_length = end - start
-    scaling_factor = Decimal(1) / Decimal(chromosome_length)  # Calculate the scaling factor as Decimal
-    scaled_start = Decimal(i)
-    scaled_end = scaled_start + Decimal(chromosome_length) * scaling_factor  # Apply the scaling factor
-    normalised_chromosome_lengths[chromosome] = (scaled_start, scaled_end)
-    scaling_factors[chromosome] = scaling_factor  # Store the scaling factor
+    Returns:
+        tuple: A tuple containing two dictionaries: normalised_chromosome_lengths
+        and scaling_factors.
+    """
+    normalised_chromosome_lengths = {}
+    scaling_factors = {}
+
+    for i, (chromosome, (start, end)) in enumerate(chromosome_lengths.items(), start=1):
+        chromosome_length = end - start
+        scaling_factor = Decimal(1) / Decimal(chromosome_length)
+        scaled_start = Decimal(i)
+        scaled_end = scaled_start + Decimal(chromosome_length) * scaling_factor
+        normalised_chromosome_lengths[chromosome] = (scaled_start, scaled_end)
+        scaling_factors[chromosome] = scaling_factor
+
+    return normalised_chromosome_lengths, scaling_factors
+
+# Example usage:
+chromosome_lengths = {
+    "chr1": (1, 249250621),
+    # Add data for other chromosomes if needed
+}
+
+normalized_lengths, factors = normalize_chromosome_lengths(chromosome_lengths)
+print(normalized_lengths)
+print(factors)
+
+
+
+
+
+
 
 # Sample data for different datasets
 snp_data = {
     "chr1": (200000, 149000000, -0.2),
+    "chr2": (1, 143199373, 0.3),
+    "chr3": (1, 198022430, 0.3),
+    "chrX": (1,75270560, 0.1),
+    "chrY": (1, 19373566, 0.12)
+    # Add data for other chromosomes if needed
+}
+
+cnvkit_data = {
+    "chr1": (1, 249250621, 0.1),
+    "chr2": (1, 143199373, 0.3),
+    "chr3": (1, 198022430, 0.3),
+    "chrX": (1,75270560, 0.1),
+    "chrY": (1, 19373566, 0.12)
+    # Add data for other chromosomes if needed
+}
+
+cnvrobot_data = {
+    "chr1": (1, 249250621, 0.05),
+    "chr1": (1, 249250621, 0.1),
     "chr2": (1, 143199373, 0.3),
     "chr3": (1, 198022430, 0.3),
     "chrX": (1,75270560, 0.1),
