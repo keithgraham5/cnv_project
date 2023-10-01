@@ -227,8 +227,8 @@ print(f" transfored results are {transformed_results}")
 
 
 
-# # Display the plot
-# plt.show()
+# Display the plot
+plt.show()
 
 # # Add a horizontal line at the center of the Y-axis (where '0' is)
 # ax.axhline(y=0, color='gray', linestyle='--', linewidth=0.5)
