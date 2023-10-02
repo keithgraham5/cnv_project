@@ -36,51 +36,34 @@ chromosome_lengths = {
 
 
 # Sample data for different datasets
-call_data = {
+data_sources = {
+"call_data" : {
     "chr1": (200000, 149000000, -0.2),
-    "chr2": (1, 143199373, 0.3),
-    "chr3": (1, 198022430, 0.3),
-    "chrX": (1,75270560, 0.1),
-    "chrY": (1, 19373566, 0.12)
+    # Add data for other chromosomes if needed
+},
+
+"cnvkit_data" : {
+    "chr1": (1, 249250621, 0.1),
+    # "chr2": (1, 143199373, 0.3),
+    # Add data for other chromosomes if needed
+},
+
+"cnvrobot_data" : {
+    "chr1": (1, 249250621, 0.05),
+    # "chr1": (1, 249250621, 0.1),
+    # "chr2": (1, 143199373, 0.3),
+    # "chr3": (1, 198022430, 0.3),
+    # "chrX": (1,75270560, 0.1),
+    # "chrY": (1, 19373566, 0.12)
     # Add data for other chromosomes if needed
 }
-
-# # Sample data for different datasets
-# snp_data = {
-#     "chr1": (200000, 149000000, -0.2),
-#     "chr2": (1, 143199373, 0.3),
-#     "chr3": (1, 198022430, 0.3),
-#     "chrX": (1,75270560, 0.1),
-#     "chrY": (1, 19373566, 0.12)
-#     # Add data for other chromosomes if needed
-# }
-
-# cnvkit_data = {
-#     "chr1": (1, 249250621, 0.1),
-#     "chr2": (1, 143199373, 0.3),
-#     "chr3": (1, 198022430, 0.3),
-#     "chrX": (1,75270560, 0.1),
-#     "chrY": (1, 19373566, 0.12)
-#     # Add data for other chromosomes if needed
-# }
-
-# cnvrobot_data = {
-#     "chr1": (1, 249250621, 0.05),
-#     "chr1": (1, 249250621, 0.1),
-#     "chr2": (1, 143199373, 0.3),
-#     "chr3": (1, 198022430, 0.3),
-#     "chrX": (1,75270560, 0.1),
-#     "chrY": (1, 19373566, 0.12)
-#     # Add data for other chromosomes if needed
-# }
+}
 
 # Define a mapping for 'X' and 'Y'
 chromosome_mapping = {
     "chrX": "23",
     "chrY": "24",
 }
-
-
 
 
 class ChromosomeLengthNormaliser:
@@ -133,15 +116,15 @@ class DataScaler:
     A class for scaling data using provided scaling factors.
     """
 
-    def __init__(self, call_data, scaling_factors):
+    def __init__(self, data, scaling_factors):
         """
         Initialise a DataScaler object.
 
         Args:
-            call_data (dict): A dictionary containing data to be scaled.
+            data (dict): A dictionary containing data to be scaled.
             scaling_factors (dict): A dictionary containing scaling factors for each chromosome.
         """
-        self.call_data = call_data
+        self.data = data
         self.scaling_factors = scaling_factors
         self.scaled_data = {}
 
@@ -155,17 +138,18 @@ class DataScaler:
         Returns:
             None
         """
-        # Loop through each chromosome and its corresponding data
-        for chromosome, (start, end, value) in self.call_data.items():
-            # Get scaling factor for this chromosome from provided dictionary
-            scaling_factor = self.scaling_factors[chromosome]
+        for source_name, source_data in self.data.items():
+            self.scaled_data[source_name] = {}  # Create a dictionary for storing scaled data
+            for chromosome, (start, end, value) in source_data.items():
+                # Get scaling factor for this chromosome from provided dictionary
+                scaling_factor = self.scaling_factors[chromosome]
 
-            # Scale the start and end positions using the scaling factor
-            scaled_start = Decimal(start) * scaling_factor
-            scaled_end = Decimal(end) * scaling_factor
+                # Scale the start and end positions using the scaling factor
+                scaled_start = Decimal(start) * scaling_factor
+                scaled_end = Decimal(end) * scaling_factor
 
-            # Store the scaled data in the dictionary
-            self.scaled_data[chromosome] = (scaled_start, scaled_end, value)
+                # Store the scaled data in the dictionary
+                self.scaled_data[source_name][chromosome] = (scaled_start, scaled_end, value)
         
 class DataTransformer:
     """
@@ -194,13 +178,14 @@ class DataTransformer:
         Returns:
             dict: A dictionary containing the transformed and stored data.
         """
-        for chromosome, (start, end, call) in self.scaled_data.items():
-            # Calculate transformed start and end positions based on chromosome mapping
-            transformed_start = Decimal(start) + Decimal(self.chromosome_mapping.get(chromosome, chromosome[3:]))
-            transformed_end = Decimal(end) + Decimal(self.chromosome_mapping.get(chromosome, chromosome[3:]))
-            
-            # Store the transformed data in the dictionary
-            self.transformed_scaled_data[chromosome] = (transformed_start, transformed_end, call)
+        for source_name, source_data in self.scaled_data.items():
+            for chromosome, (start, end, call) in source_data.items():
+                # Calculate transformed start and end positions based on chromosome mapping
+                transformed_start = Decimal(start) + Decimal(self.chromosome_mapping.get(chromosome, chromosome[3:]))
+                transformed_end = Decimal(end) + Decimal(self.chromosome_mapping.get(chromosome, chromosome[3:]))
+                
+                # Store the transformed data in the dictionary
+                self.transformed_scaled_data[chromosome] = (transformed_start, transformed_end, call)
 
 
 def set_x_axis_ticks_labels_vertical_lines(ax, normalised_chromosome_lengths):
@@ -261,7 +246,7 @@ def plot_call_data(ax, transformed_scaled_data):
         
 # Create instances of the classes 
 normaliser = ChromosomeLengthNormaliser(chromosome_lengths)
-scaler = DataScaler(call_data, normaliser.scaling_factors)
+scaler = DataScaler(data_sources, normaliser.scaling_factors)
 transformer = DataTransformer(scaler.scaled_data, chromosome_mapping)
 
 #  Normlaised_chromosome_lengths method 
