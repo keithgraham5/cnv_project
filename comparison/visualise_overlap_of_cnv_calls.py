@@ -100,8 +100,6 @@ class ChromosomeLengthNormaliser:
             tuple: A tuple containing two dictionaries: normalised_chromosome_lengths
             and scaling_factors.
         """
-        # normalised_chromosome_lengths = {}
-        # scaling_factors = {}
 
         for i, (chromosome, (start, end)) in enumerate(self.chromosome_lengths.items(), start=1):
             chromosome_length = end - start
@@ -115,7 +113,6 @@ class ChromosomeLengthNormaliser:
             print(f"Scaling Factor: {scaling_factor}")
             print(f"Scaled Start: {scaled_start}")
             print(f"Scaled End: {scaled_end}")
-
             
 # Create instances of the classes 
 normaliser = ChromosomeLengthNormaliser(chromosome_lengths)
