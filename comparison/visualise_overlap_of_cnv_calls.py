@@ -35,15 +35,15 @@ chromosome_lengths = {
 
 
 
-# # Sample data for different datasets
-# call_data = {
-#     "chr1": (200000, 149000000, -0.2),
-#     "chr2": (1, 143199373, 0.3),
-#     "chr3": (1, 198022430, 0.3),
-#     "chrX": (1,75270560, 0.1),
-#     "chrY": (1, 19373566, 0.12)
-#     # Add data for other chromosomes if needed
-# }
+# Sample data for different datasets
+call_data = {
+    "chr1": (200000, 149000000, -0.2),
+    "chr2": (1, 143199373, 0.3),
+    "chr3": (1, 198022430, 0.3),
+    "chrX": (1,75270560, 0.1),
+    "chrY": (1, 19373566, 0.12)
+    # Add data for other chromosomes if needed
+}
 
 # # Sample data for different datasets
 # snp_data = {
@@ -85,6 +85,12 @@ chromosome_lengths = {
 
 class ChromosomeLengthNormaliser:
     def __init__(self, chromosome_lengths):
+        """
+        Initialize a ChromosomeLengthNormaliser object.
+
+        Args:
+            chromosome_lengths (dict): A dictionary containing chromosome lengths.
+        """
         self.chromosome_lengths = chromosome_lengths
         self.normalised_chromosome_lengths = {}
         self.scaling_factors = {}
@@ -108,17 +114,45 @@ class ChromosomeLengthNormaliser:
             scaled_end = scaled_start + Decimal(chromosome_length) * scaling_factor
             self.normalised_chromosome_lengths[chromosome] = (scaled_start, scaled_end)
             self.scaling_factors[chromosome] = scaling_factor  # Update the global scaling_factors
+            # Sanity checks
             print(f"Chromosome: {chromosome}")
             print(f"Original Length: {chromosome_length}")
             print(f"Scaling Factor: {scaling_factor}")
             print(f"Scaled Start: {scaled_start}")
             print(f"Scaled End: {scaled_end}")
+               
+               
+class DataScaler:
+    def __init__(self, call_data, scaling_factors):
+        self.call_data = call_data
+        self.scaling_factors = scaling_factors
+        self.scaled_data = {}
+        
+        
+    def scale_data(self):  
+        # Loop through each chromosome and its corresponding data
+        for chromosome, (start, end, value) in self.call_data.items():
+            # Get the scaling factor for this chromosome from the provided dictionary
+            scaling_factor = self.scaling_factors[chromosome]
+            
+            # Scale the start and end positions using the scaling factor
+            scaled_start = Decimal(start) * scaling_factor
+            scaled_end = Decimal(end) * scaling_factor
+            
+            # Store the scaled data in the dictionary
+            self.scaled_data[chromosome] = (scaled_start, scaled_end, value)
+        
+        
+    
             
 # Create instances of the classes 
 normaliser = ChromosomeLengthNormaliser(chromosome_lengths)
+scaler = DataScaler(call_data, normaliser.scaling_factors)
 
-# Call the normlaised_chromosome_lengths method 
+#  Normlaised_chromosome_lengths method 
 normaliser.normalise_chromosome_lengths()
+# Scale the call data
+scaler.scale_data()
 
 
 
