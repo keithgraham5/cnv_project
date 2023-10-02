@@ -62,6 +62,7 @@
 import matplotlib.pyplot as plt
 import mplcursors  # Import mplcursors
 from decimal import Decimal
+import matplotlib.cm as cm  # Import the color map module
 
 # Create a figure and axis
 fig, ax = plt.subplots()
@@ -114,11 +115,11 @@ data_sources = [
     (
         "cnvrobot_data",
         [
-            ("chr1", (1, 249250621, 0.05)),
-            ("chr1", (1, 249250621, 0.1)),
-            ("chr2", (1, 143199373, 0.3)),
-            ("chr3", (1, 198022430, 0.3)),
-            ("chrX", (1,75270560, 0.1)),
+            # ("chr1", (1, 249250621, 0.05)),
+            # ("chr1", (1, 249250621, 0.1)),
+            ("chr2", (1, 143199373, 0.2)),
+            # ("chr3", (1, 198022430, 0.3)),
+            ("chrX", (1, 75270560, 0.1)),
             ("chrY", (1, 19373566, 0.12))
             # Add data for other chromosomes if needed
         ],
@@ -312,27 +313,33 @@ def set_y_axis_ticks_labels_lines(ax):
     ax.axhline(y=0, color="gray", linestyle="--", linewidth=0.5)
 
 
-def plot_call_data(ax, transformed_scaled_data):
+def plot_call_data(ax, transformed_scaled_data, color_map):
     """
-    Plot call data on the given Matplotlib axis.
+    Plot call data on the given Matplotlib axis with different colors for each data set.
 
     Args:
         ax (matplotlib.axes._axes.Axes): The Matplotlib axis on which to plot 
-        the data. transformed_scaled_data (list): A list of tuples containing 
-        transformed and scaled call data.
+        the data.
+        transformed_scaled_data (list): A list of tuples containing 
+        transformed and scaled call data for different data sets.
+        color_map: The color map to use for generating distinct colors.
 
     Returns:
         None
     """
-    for source_name, source_data in transformed_scaled_data:
+    for i, (source_name, source_data) in enumerate(transformed_scaled_data):
+        color = color_map(i)  # Get a distinct color from the color map
         for chromosome, (start, end, call) in source_data:
             x_start = float(start)
             x_end = float(end)
             y_value = float(call)
 
-            # Plot a line segment on the x-axis
-            ax.plot([x_start, x_end], [y_value, y_value], marker="o", markersize=1)
+            # Plot a line segment on the x-axis with the assigned color
+            ax.plot([x_start, x_end], [y_value, y_value], marker='o', markersize=1, color=color)
 
+
+# Define a color map to generate a sequence of distinct colors for your data sets:
+color_map = plt.colormaps['tab10']  # You can choose a different color map if you prefer
 
 # Create instances of the classes
 normaliser = ChromosomeLengthNormaliser(chromosome_lengths)
@@ -350,8 +357,8 @@ transformer.transform_and_store_data()
 set_x_axis_ticks_labels_vertical_lines(ax, normaliser.normalised_chromosome_lengths)
 # Set Y-axis ticks, labels, limits, and horizontal line
 set_y_axis_ticks_labels_lines(ax)
-# Plot the call data
-plot_call_data(ax, transformer.transformed_scaled_data)
+# Plot the call data with distinct colors
+plot_call_data(ax, transformer.transformed_scaled_data, color_map)
 
 # Display the plot
 plt.show()
