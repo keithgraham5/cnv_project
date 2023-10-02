@@ -74,11 +74,11 @@ call_data = {
 #     # Add data for other chromosomes if needed
 # }
 
-# # Define a mapping for 'X' and 'Y'
-# chromosome_mapping = {
-#     "chrX": "23",
-#     "chrY": "24",
-# }
+# Define a mapping for 'X' and 'Y'
+chromosome_mapping = {
+    "chrX": "23",
+    "chrY": "24",
+}
 
 
 
@@ -134,25 +134,36 @@ class DataScaler:
         for chromosome, (start, end, value) in self.call_data.items():
             # Get the scaling factor for this chromosome from the provided dictionary
             scaling_factor = self.scaling_factors[chromosome]
-            
             # Scale the start and end positions using the scaling factor
             scaled_start = Decimal(start) * scaling_factor
             scaled_end = Decimal(end) * scaling_factor
-            
             # Store the scaled data in the dictionary
             self.scaled_data[chromosome] = (scaled_start, scaled_end, value)
         
+class DataTransformer:
+    def __init__(self, scaled_data, chromosome_mapping):
+        self.scaled_data =scaled_data 
+        self.chromosome_mapping = chromosome_mapping
+        self.transformed_scaled_data = {}
         
-    
-            
-# Create instances of the classes 
-normaliser = ChromosomeLengthNormaliser(chromosome_lengths)
-scaler = DataScaler(call_data, normaliser.scaling_factors)
+    def transform_and_store_data(self):
+        """
+        Transform and store the scaled sample data.
 
-#  Normlaised_chromosome_lengths method 
-normaliser.normalise_chromosome_lengths()
-# Scale the call data
-scaler.scale_data()
+        Args:
+            scaled_data (dict): A dictionary containing the scaled data.
+            chromosome_mapping (dict): A dictionary mapping chromosome names to their transformed values.
+
+        Returns:
+            dict: A dictionary containing the transformed and stored data.
+        """
+        for chromosome, (start, end, call) in self.scaled_data.items():
+            transformed_start = Decimal(start) + Decimal(self.chromosome_mapping.get(chromosome, chromosome[3:]))
+            transformed_end = Decimal(end) + Decimal(self.chromosome_mapping.get(chromosome, chromosome[3:]))
+            self.transformed_scaled_data[chromosome] = (transformed_start, transformed_end, call)
+
+
+            
 
 
 
@@ -213,79 +224,90 @@ scaler.scale_data()
 #     return transformed_scaled_data
 
 
-# def set_x_axis_ticks_labels_vertical_lines(ax, normalised_chromosome_lengths):
-#     """
-#     Set the tick positions, labels and vertical lines on the x-axis of a given 
-#     x axis.
+def set_x_axis_ticks_labels_vertical_lines(ax, normalised_chromosome_lengths):
+    """
+    Set the tick positions, labels and vertical lines on the x-axis of a given 
+    x axis.
 
-#     Args:
-#         ax (matplotlib.axes._axes.Axes): The Matplotlib axis on which to set the
-#         ticks and labels. normalised_chromosome_lengths (dict): A dictionary 
-#         containing chromosome lengths and their corresponding scaled positions.
-#     """
-#     # Extract the transformed start values as tick positions
-#     tick_positions = [float(start) for start, _ in normalised_chromosome_lengths.values()]
+    Args:
+        ax (matplotlib.axes._axes.Axes): The Matplotlib axis on which to set the
+        ticks and labels. normalised_chromosome_lengths (dict): A dictionary 
+        containing chromosome lengths and their corresponding scaled positions.
+    """
+    # Extract the transformed start values as tick positions
+    tick_positions = [float(start) for start, _ in normalised_chromosome_lengths.values()]
 
-#     # Set the tick positions, labels and vertical lines on the x-axis
-#     ax.set_xticks(tick_positions)
-#     ax.set_xticklabels(normalised_chromosome_lengths.keys())
-#     for position in tick_positions:
-#         ax.axvline(x=position, color='gray', linestyle='--', linewidth=0.5)
-#     # Set the x axis limits with extension to include the Y chromosome 
-#     ax.set_xlim(tick_positions[0], tick_positions[-1]+1)
+    # Set the tick positions, labels and vertical lines on the x-axis
+    ax.set_xticks(tick_positions)
+    ax.set_xticklabels(normalised_chromosome_lengths.keys())
+    for position in tick_positions:
+        ax.axvline(x=position, color='gray', linestyle='--', linewidth=0.5)
+    # Set the x axis limits with extension to include the Y chromosome 
+    ax.set_xlim(tick_positions[0], tick_positions[-1]+1)
     
-# def set_y_axis_ticks_labels_lines(ax):
-#     """
-#     Set the Y-ticks, labels, limits, and add a horizontal line at the center of the Y-axis.
+def set_y_axis_ticks_labels_lines(ax):
+    """
+    Set the Y-ticks, labels, limits, and add a horizontal line at the center of the Y-axis.
 
-#     Args:
-#         ax (matplotlib.axes._axes.Axes): The Matplotlib axis on which to set Y-axis properties.
-#     """
-#     # Set Y-ticks, lables
-#     ax.set_yticks([-1, 0, 1])
-#     ax.set_yticklabels(['CNV losses', '0', 'CNV gains'])
-#     # Set Y-axis limtes to ensure a constant distance from -1, 0, and 1
-#     ax.set_ylim(-1.0, 1.0)
-#     # Add a horizontal line at the center of the Y-axis (where '0' is
-#     ax.axhline(y=0, color='gray', linestyle='--', linewidth=0.5)
+    Args:
+        ax (matplotlib.axes._axes.Axes): The Matplotlib axis on which to set Y-axis properties.
+    """
+    # Set Y-ticks, lables
+    ax.set_yticks([-1, 0, 1])
+    ax.set_yticklabels(['CNV losses', '0', 'CNV gains'])
+    # Set Y-axis limtes to ensure a constant distance from -1, 0, and 1
+    ax.set_ylim(-1.0, 1.0)
+    # Add a horizontal line at the center of the Y-axis (where '0' is
+    ax.axhline(y=0, color='gray', linestyle='--', linewidth=0.5)
     
-# def plot_call_data(ax, transformed_scaled_data):
-#     """
-#     Plot call data on the given Matplotlib axis.
+def plot_call_data(ax, transformed_scaled_data):
+    """
+    Plot call data on the given Matplotlib axis.
 
-#     Args:
-#         ax (matplotlib.axes._axes.Axes): The Matplotlib axis on which to plot 
-#         the data. transformed_scaled_data (dict): A dictionary containing 
-#         transformed and scaled call data.
+    Args:
+        ax (matplotlib.axes._axes.Axes): The Matplotlib axis on which to plot 
+        the data. transformed_scaled_data (dict): A dictionary containing 
+        transformed and scaled call data.
 
-#     Returns:
-#         None
-#     """
-#     for chromosome, (start, end, call) in transformed_scaled_data.items():
-#         x_start = float(start)
-#         x_end = float(end)
-#         y_value = float(call)
+    Returns:
+        None
+    """
+    for chromosome, (start, end, call) in transformed_scaled_data.items():
+        x_start = float(start)
+        x_end = float(end)
+        y_value = float(call)
         
-#         # Plot a line segment on the x-axis
-#         ax.plot([x_start, x_end], [y_value, y_value], marker='o', markersize=1)
+        # Plot a line segment on the x-axis
+        ax.plot([x_start, x_end], [y_value, y_value], marker='o', markersize=1)
+
+# Create instances of the classes 
+normaliser = ChromosomeLengthNormaliser(chromosome_lengths)
+scaler = DataScaler(call_data, normaliser.scaling_factors)
+transformer = DataTransformer(scaler.scaled_data, chromosome_mapping)
+
+#  Normlaised_chromosome_lengths method 
+normaliser.normalise_chromosome_lengths()
+# Scale the call data
+scaler.scale_data()
+# Transform and store the scaled data
+transformer.transform_and_store_data()
 
 
-
-# # Noralise chromosome lengths and calculate scaling factors 
+# Noralise chromosome lengths and calculate scaling factors 
 # normalised_chromosome_lengths, scaling_factors = normalise_chromosome_lengths(chromosome_lengths)
-# # Scale the call data using scaling factors derived from normlaisation of chromosome lengths
+# Scale the call data using scaling factors derived from normlaisation of chromosome lengths
 # scaled_data =  scale_call_data(call_data, scaling_factors)
-# # Transform and store the scaled data
+# Transform and store the scaled data
 # transformed_scaled_data = transform_and_store_data(scaled_data, chromosome_mapping)
-# # Set X-axis ticks, labels, and vertical lines
-# x_tick_and_labels = set_x_axis_ticks_labels_vertical_lines(ax, normalised_chromosome_lengths)
-# # Set Y-axis ticks, labels, limits, and horizontal line
-# y_tick_and_lables = set_y_axis_ticks_labels_lines(ax)
-# # Plot the call data
-# plots = plot_call_data(ax, transformed_scaled_data)
-# 
+# Set X-axis ticks, labels, and vertical lines
+x_tick_and_labels = set_x_axis_ticks_labels_vertical_lines(ax, normaliser.normalised_chromosome_lengths)
+# Set Y-axis ticks, labels, limits, and horizontal line
+y_tick_and_lables = set_y_axis_ticks_labels_lines(ax)
+# Plot the call data
+plots = plot_call_data(ax, transformer.transformed_scaled_data)
+
 # Display the plot
-# plt.show()
+plt.show()
 
 
 
