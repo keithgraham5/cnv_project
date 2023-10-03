@@ -108,7 +108,7 @@ data_sources = [
         "cnvkit_data",
         [
             ("chr1", (1, 249250621, 0.1)),
-            ("chr2", (1, 143199373, 0.3))
+            # ("chr2", (1, 143199373, 0.3))
             # Add data for other chromosomes if needed
         ],
     ),
@@ -117,7 +117,7 @@ data_sources = [
         [
             # ("chr1", (1, 249250621, 0.05)),
             # ("chr1", (1, 249250621, 0.1)),
-            ("chr2", (1, 143199373, 0.2)),
+            # ("chr2", (1, 143199373, 0.2)),
             # ("chr3", (1, 198022430, 0.3)),
             ("chrX", (1, 75270560, 0.1)),
             ("chrY", (1, 19373566, 0.12))
@@ -313,7 +313,7 @@ def set_y_axis_ticks_labels_lines(ax):
     ax.axhline(y=0, color="gray", linestyle="--", linewidth=0.5)
 
 
-def plot_call_data(ax, transformed_scaled_data, color_map):
+def plot_call_data(ax, transformed_scaled_data):
     """
     Plot call data on the given Matplotlib axis with different colors for each data set.
 
@@ -327,8 +327,10 @@ def plot_call_data(ax, transformed_scaled_data, color_map):
     Returns:
         None
     """
+    primary_colours = ['red', 'blue', 'green']
+    
     for i, (source_name, source_data) in enumerate(transformed_scaled_data):
-        color = color_map(i)  # Get a distinct color from the color map
+        color = primary_colours[i % len(primary_colours)]  # Get a distinct color from the color map
         for chromosome, (start, end, call) in source_data:
             x_start = float(start)
             x_end = float(end)
@@ -337,9 +339,6 @@ def plot_call_data(ax, transformed_scaled_data, color_map):
             # Plot a line segment on the x-axis with the assigned color
             ax.plot([x_start, x_end], [y_value, y_value], marker='o', markersize=1, color=color)
 
-
-# Define a color map to generate a sequence of distinct colors for your data sets:
-color_map = plt.colormaps['tab10']  # You can choose a different color map if you prefer
 
 # Create instances of the classes
 normaliser = ChromosomeLengthNormaliser(chromosome_lengths)
@@ -358,7 +357,7 @@ set_x_axis_ticks_labels_vertical_lines(ax, normaliser.normalised_chromosome_leng
 # Set Y-axis ticks, labels, limits, and horizontal line
 set_y_axis_ticks_labels_lines(ax)
 # Plot the call data with distinct colors
-plot_call_data(ax, transformer.transformed_scaled_data, color_map)
+plot_call_data(ax, transformer.transformed_scaled_data)
 
 # Display the plot
 plt.show()
