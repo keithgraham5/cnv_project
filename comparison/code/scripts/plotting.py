@@ -1,4 +1,19 @@
 
+import matplotlib.pyplot as plt
+import mplcursors  # Import mplcursors
+from decimal import Decimal
+import matplotlib.cm as cm  # Import the color map module
+
+import manipulation
+
+# Set X-axis ticks, labels, and vertical lines
+set_x_axis_ticks_labels_vertical_lines(ax, normaliser.normalised_chromosome_lengths)
+# Set Y-axis ticks, labels, limits, and horizontal line
+set_y_axis_ticks_labels_lines(ax)
+# Plot the call data with distinct colors
+plot_call_data(ax, transformer.transformed_scaled_data)
+
+
 
 
 def set_x_axis_ticks_labels_vertical_lines(ax, normalised_chromosome_lengths):
@@ -65,12 +80,12 @@ def plot_call_data(ax, transformed_scaled_data):
             # Plot a line segment on the x-axis with the assigned color
             ax.plot([x_start, x_end], [y_value, y_value], marker='o', markersize=1, color=color)
             
-# Set X-axis ticks, labels, and vertical lines
-set_x_axis_ticks_labels_vertical_lines(ax, normaliser.normalised_chromosome_lengths)
-# Set Y-axis ticks, labels, limits, and horizontal line
-set_y_axis_ticks_labels_lines(ax)
-# Plot the call data with distinct colors
-plot_call_data(ax, transformer.transformed_scaled_data)
+# # Set X-axis ticks, labels, and vertical lines
+# set_x_axis_ticks_labels_vertical_lines(ax, normaliser.normalised_chromosome_lengths)
+# # Set Y-axis ticks, labels, limits, and horizontal line
+# set_y_axis_ticks_labels_lines(ax)
+# # Plot the call data with distinct colors
+# plot_call_data(ax, transformer.transformed_scaled_data)
 
-# Display the plot
-plt.show()
+# # Display the plot
+# plt.show()
