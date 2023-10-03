@@ -1,68 +1,9 @@
-# import matplotlib.pyplot as plt
-# import mplcursors  # Import mplcursors
-# from decimal import Decimal
-
-# # Create a figure and axis
-# fig, ax = plt.subplots()
-
-# # Define chromosome lengths (you can customize this based on your data)
-# chromosome_lengths = {
-#     "chr1": (1, 249250621),
-#     "chr2": (1, 243199373),
-#     "chr3": (1, 198022430),
-#     "chr4": (1, 191154276),
-#     "chr5": (1, 180915260),
-#     "chr6": (1, 171115067),
-#     "chr7": (1, 159138663),
-#     "chr8": (1, 146364022),
-#     "chr9": (1, 141213431),
-#     "chr10": (1, 135534747),
-#     "chr11": (1, 135006516),
-#     "chr12": (1, 133851895),
-#     "chr13": (1, 115169878),
-#     "chr14": (1, 107349540),
-#     "chr15": (1, 102531392),
-#     "chr16": (1, 90354753),
-#     "chr17": (1, 81195210),
-#     "chr18": (1, 78077248),
-#     "chr19": (1, 59128983),
-#     "chr20": (1, 63025520),
-#     "chr21": (1, 48129895),
-#     "chr22": (1, 51304566),
-#     "chrX": (1, 155270560),
-#     "chrY": (1, 59373566),
-# }
-
-
-
-# # Sample data for different datasets
-# data_sources = {
-# "call_data" : {
-#     "chr1": (200000, 149000000, -0.2),
-#     # Add data for other chromosomes if needed
-# },
-
-# "cnvkit_data" : {
-#     "chr1": (1, 249250621, 0.1),
-#     # "chr2": (1, 143199373, 0.3),
-#     # Add data for other chromosomes if needed
-# },
-
-# "cnvrobot_data" : {
-#     # "chr1": (1, 249250621, 0.05),
-#     "chr1": (1, 24900000, 0.1),
-#     # "chr2": (1, 143199373, 0.3),
-#     # "chr3": (1, 198022430, 0.3),
-#     # "chrX": (1,75270560, 0.1),
-#     # "chrY": (1, 19373566, 0.12)
-#     # Add data for other chromosomes if needed
-# }
-# }
-
 import matplotlib.pyplot as plt
 import mplcursors  # Import mplcursors
 from decimal import Decimal
 import matplotlib.cm as cm  # Import the color map module
+
+from extraction import data_sources
 
 # Create a figure and axis
 fig, ax = plt.subplots()
@@ -96,35 +37,35 @@ chromosome_lengths = {
 }
 
 # Sample data for different datasets
-data_sources = [
-    (
-        "call_data",
-        [
-            ("chr1", (200000, 149000000, -0.2)),
-            # Add data for other chromosomes if needed
-        ],
-    ),
-    (
-        "cnvkit_data",
-        [
-            ("chr1", (1, 249250621, 0.1)),
-            # ("chr2", (1, 143199373, 0.3))
-            # Add data for other chromosomes if needed
-        ],
-    ),
-    (
-        "cnvrobot_data",
-        [
-            # ("chr1", (1, 249250621, 0.05)),
-            # ("chr1", (1, 249250621, 0.1)),
-            # ("chr2", (1, 143199373, 0.2)),
-            # ("chr3", (1, 198022430, 0.3)),
-            ("chrX", (1, 75270560, 0.1)),
-            ("chrY", (1, 19373566, 0.12))
-            # Add data for other chromosomes if needed
-        ],
-    ),
-]
+# data_sources = [
+#     (
+#         "call_data",
+#         [
+#             ("chr1", (200000, 149000000, -0.2)),
+#             # Add data for other chromosomes if needed
+#         ],
+#     ),
+#     (
+#         "cnvkit_data",
+#         [
+#             ("chr1", (1, 249250621, 0.1)),
+#             # ("chr2", (1, 143199373, 0.3))
+#             # Add data for other chromosomes if needed
+#         ],
+#     ),
+#     (
+#         "cnvrobot_data",
+#         [
+#             # ("chr1", (1, 249250621, 0.05)),
+#             # ("chr1", (1, 249250621, 0.1)),
+#             # ("chr2", (1, 143199373, 0.2)),
+#             # ("chr3", (1, 198022430, 0.3)),
+#             ("chrX", (1, 75270560, 0.1)),
+#             ("chrY", (1, 19373566, 0.12))
+#             # Add data for other chromosomes if needed
+#         ],
+#     ),
+# ]
 
 # Define a mapping for 'X' and 'Y'
 chromosome_mapping = {
@@ -285,3 +226,6 @@ normaliser.normalise_chromosome_lengths()
 scaler.scale_data()
 # Transform and store the scaled data
 transformer.transform_and_store_data()
+
+
+# Sanity checks
