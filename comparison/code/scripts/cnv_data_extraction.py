@@ -10,10 +10,40 @@ def extract_data_from_snp_source(snp_source):
     # Return data in the format [("chr1", (start, end call)),....]
     # Store list in list in source list "call_data", [("chr1", (start, end call)),....]
 
-def extract_data_from_cnvkit_source():
-    # Read data from source and extract CNV calls 
-    # Return data in the format [("chr1", (start, end call)),....]
-    # Store list in list in source list "call_data", [("chr1", (start, end call)),....]
+
+def extract_data_from_cnvkit_source(cnvkit_data):
+    # Read the data into a pandas DataFrame
+    df = pd.read_csv(cnvkit_data, delimiter="\t")
+
+    # Filter rows where 'cn' is below or above 2
+    filtered_df = df[(df['cn'] < 2) | (df['cn'] > 2)]
+    
+    # Initialize a list to store the formatted data
+    formatted_data = []
+    
+    for index, row in filtered_df.iterrows():
+        # Extract the relevant information from the DataFrame row
+        chromosome = row['chromosome']
+        start = row['start']
+        end = row['end']
+        log2 = row['log2']
+        
+        # Create a tuple with the extracted information
+        data_tuple = (chromosome, (start, end, log2))
+        
+        # Append the data tuple to the formatted_data list
+        formatted_data.append(data_tuple)
+    
+    return formatted_data
+
+# Call the function with your file path
+filtered_cnvkit_data = extract_data_from_cnvkit_source(cnvkit_data)
+
+# Create the output in the desired format
+output = ("cnvkit_data", filtered_cnvkit_data)
+
+# Print the formatted output
+print(output)
     
 def extract_data_from_cnvrobot_source():
     # Read data from source and extract CNV calls 
