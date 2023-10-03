@@ -9,10 +9,6 @@ snp_data = "/home/keith/BIOL61860_research_project_in_clinical_bioinformatics/cn
 #     # Return data in the format [("chr1", (start, end call)),....]
 #     # Store list in list in source list "call_data", [("chr1", (start, end call)),....]
 
-#     # Return data in the format [("chr1", (start, end call)),....]
-#     # Store list in list in source list "call_data", [("chr1", (start, end call)),....]
-
-
 def extract_data_from_cnvkit_source(cnvkit_data):
     # Read the data into a pandas DataFrame
     df = pd.read_csv(cnvkit_data, delimiter="\t")
@@ -39,20 +35,15 @@ def extract_data_from_cnvkit_source(cnvkit_data):
     return formatted_data
 
 # Call the function with your file path
-# filtered_cnvkit_data = extract_data_from_cnvkit_source(cnvkit_data)
+filtered_cnvkit_data = extract_data_from_cnvkit_source(cnvkit_data)
 
 # Create the output in the desired format
-# output = ("cnvkit_data", filtered_cnvkit_data)
+cnvkit_output = ("cnvkit_data", filtered_cnvkit_data)
 
-# Print the formatted output
-# print(output)
     
 def extract_data_from_cnvrobot_source(cnvrobot_data):
     # Read the data into a pandas DataFrame
     df = pd.read_csv(cnvrobot_data, delimiter="\t")
-    
-    # print("Column Header:")
-    # print(df.columns.tolist())
     
    # Filter rows where 'TYPE' is either 'LOSS' or 'GAIN'
     filtered_df = df[df['TYPE'].isin(['LOSS', 'GAIN'])]
@@ -61,11 +52,9 @@ def extract_data_from_cnvrobot_source(cnvrobot_data):
     formatted_data = []
     
     for index, row in filtered_df.iterrows():
-        # print(filtered_df)
-        
+
         #Extract the relevant information from the DataFrame row
         chromosome = row['CONTIG']
-        print(chromosome)
         start = row['START']
         end = row['END']
         log2 = row['MEAN_L2R']
@@ -82,63 +71,15 @@ def extract_data_from_cnvrobot_source(cnvrobot_data):
 filtered_cnvrobot_data = extract_data_from_cnvrobot_source(cnvrobot_data)
 
 # Create the output in the desired format 
-output = ("cnvrobot_data", filtered_cnvrobot_data)
+cnvrobot_output = ("cnvrobot_data", filtered_cnvrobot_data)
 
-# Print formated output
-print(output)
+#  Create a list to append both cnvkit_output, cnvrobot_output, snp_output
+data_sources = []
+
+# Append outputs to the data_sources list
+data_sources.append(cnvkit_output)
+data_sources.append(cnvrobot_output)
+# data_sources.append(snp_output)
 
 
-#     # Filter rows where 'cn' is below or above 2
-#     filtered_df = df[(df['cn'] < 2) | (df['cn'] > 2)]
 
-#     # Initialize a list to store the formatted data
-#     formatted_data = []
-
-#     for index, row in filtered_df.iterrows():
-#         # Extract the relevant information from the DataFrame row
-#         chromosome = row['chromosome']
-#         start = row['start']
-#         end = row['end']
-#         log2 = row['log2']
-
-#         # Create a tuple with the extracted information
-#         data_tuple = (chromosome, (start, end, log2))
-
-#         # Append the data tuple to the formatted_data list
-#         formatted_data.append(data_tuple)
-
-#     return formatted_data
-
-# # Call the function with your file path
-# filtered_cnvkit_data = extract_data_from_cnvkit_source(cnvkit_data)
-
-# Create the output in the desired format
-# #  extract data from each source 
-# snp_data = extract_data_from_snp_source()
-# cnvkit_source = extract_data_from_cnvkit_source()
-# cnvrobot_source = extract_data_from_cnvrobot_source()
-
-# Organise data into the desired format
-data_sources = [
-    (
-        "call_data",
-        [
-            ("chr1", (200000, 149000000, -0.2)),
-            # Add data for other chromosomes if needed
-        ],
-    ),
-    (
-        "cnvkit_data",
-        [
-            ("chr1", (1, 249250621, 0.1)),
-            # Add data for other chromosomes if needed
-        ],
-    ),
-    (
-        "cnvrobot_data",
-        [
-            # ("chr1", (1, 249250621, 0.05)),
-            # Add data for other chromosomes if needed
-        ],
-    ),
-]
