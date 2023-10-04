@@ -4,19 +4,11 @@ import mplcursors  # Import mplcursors
 from decimal import Decimal
 import matplotlib.cm as cm  # Import the color map module
 
-import manipulation
-
-# Set X-axis ticks, labels, and vertical lines
-set_x_axis_ticks_labels_vertical_lines(ax, normaliser.normalised_chromosome_lengths)
-# Set Y-axis ticks, labels, limits, and horizontal line
-set_y_axis_ticks_labels_lines(ax)
-# Plot the call data with distinct colors
-plot_call_data(ax, transformer.transformed_scaled_data)
+# Create a figure and axis
+fig, ax = plt.subplots()
 
 
-
-
-def set_x_axis_ticks_labels_vertical_lines(ax, normalised_chromosome_lengths):
+def set_x_axis_ticks_labels_vertical_lines(ax, normalised_lengths):
     """
     Set the tick positions, labels, and vertical lines on the x-axis of a given 
     x axis.
@@ -27,11 +19,11 @@ def set_x_axis_ticks_labels_vertical_lines(ax, normalised_chromosome_lengths):
         containing chromosome lengths and their corresponding scaled positions.
     """
     # Extract the transformed start values as tick positions
-    tick_positions = [float(start) for start, _ in normalised_chromosome_lengths.values()]
+    tick_positions = [float(start) for start, _ in normalised_lengths.values()]
 
     # Set the tick positions, labels, and vertical lines on the x-axis
     ax.set_xticks(tick_positions)
-    ax.set_xticklabels(normalised_chromosome_lengths.keys())
+    ax.set_xticklabels(normalised_lengths.keys())
     for position in tick_positions:
         ax.axvline(x=position, color="gray", linestyle="--", linewidth=0.5)
     # Set the x-axis limits with an extension to include the Y chromosome
@@ -80,12 +72,15 @@ def plot_call_data(ax, transformed_scaled_data):
             # Plot a line segment on the x-axis with the assigned color
             ax.plot([x_start, x_end], [y_value, y_value], marker='o', markersize=1, color=color)
             
-# # Set X-axis ticks, labels, and vertical lines
-# set_x_axis_ticks_labels_vertical_lines(ax, normaliser.normalised_chromosome_lengths)
-# # Set Y-axis ticks, labels, limits, and horizontal line
-# set_y_axis_ticks_labels_lines(ax)
-# # Plot the call data with distinct colors
-# plot_call_data(ax, transformer.transformed_scaled_data)
 
-# # Display the plot
-# plt.show()
+def build_and_plot_graph(normalised_lengths, transformed_scaled_data):
+    # Set X-axis ticks, labels, and vertical lines
+    set_x_axis_ticks_labels_vertical_lines(ax, normalised_lengths)
+    # Set Y-axis ticks, labels, limits, and horizontal line
+    set_y_axis_ticks_labels_lines(ax)
+    # Plot the call data with distinct colors
+    plot_call_data(ax, transformed_scaled_data)
+
+    # Display the plot
+    plt.show()
+    
