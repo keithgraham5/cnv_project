@@ -77,13 +77,13 @@ def extract_data():
     cnvrobot_output = ("cnvrobot_data", filtered_cnvrobot_data)
     
     # Create a list to append both cnvkit_output and cnvrobot_output
-    data_sources = [cnvkit_output, cnvrobot_output]
+    filtered_parsed_data = [cnvkit_output, cnvrobot_output]
     
-    return data_sources
+    return filtered_parsed_data
 
 if __name__ == "__main__":
-    data_sources = extract_data()
-    print(data_sources)
+    filtered_parsed_data = extract_data()
+
 
 
 
