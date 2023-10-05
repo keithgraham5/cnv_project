@@ -22,47 +22,11 @@ column_headers = df.columns
 print(f"PanHeamOnc.bed file columns header:\n {column_headers}")
 print(df.iloc[0])
 
+# Initialise an empty list to store filtered SNP data
+# Loop through each row in the PanHaemOnc.bed file
+# Filter SNP data based on matching 'NEW_CHROMOSOME'
+# Filter SNP data further based on 'POSITION' within 'START' and 'END'
+# Append filtered rows to the result
+# Concatenate all the filtered SNP data rows into a single DataFrame
+# Now, filtered_snp_data_df contains SNP data that falls within the regions of interest
 
-    
-
-
-    
-    # unique_values = df['NEW_CHROMOSOME'].unique()
-    # print(unique_values)
-    # Use loc to filter rows where CHROMOSOME is '25' and print the first row
-    # Check if there are any rows with CHROMOSOME equal to '25'
-    
-    # if 25 in df['CHROMOSOME'].values:
-    #     # If there are, find and print the first row
-    #     first_row_with_25 = df.loc[df['CHROMOSOME'] == 25].iloc[0]
-    #     print(first_row_with_25)
-    # else:
-    #     print("No rows with CHROMOSOME equal to '25'")
-        
-    # count_25 = (df['CHROMOSOME'] == 25).sum()
-    # print(f"Count of '25' in CHROMOSOME column: {count_25}")
-    
-    
-
-    # # Filter rows where 'cn' is below or above 2
-    # filtered_df = df[(df['cn'] < 2) | (df['cn'] > 2)]
-
-    # # Initialize a list to store the formatted data
-    # formatted_data = []
-
-    # for index, row in filtered_df.iterrows():
-    #     # Extract the relevant information from the DataFrame row
-    #     chromosome = row['chromosome']
-    #     start = row['start']
-    #     end = row['end']
-    #     log2 = row['log2']
-
-    #     # Create a tuple with the extracted information
-    #     data_tuple = (chromosome, (start, end, log2))
-
-    #     # Append the data tuple to the formatted_data list
-    #     formatted_data.append(data_tuple)
-
-    # return formatted_data
-
-# extract_data_from_snp_data(snp_data)
